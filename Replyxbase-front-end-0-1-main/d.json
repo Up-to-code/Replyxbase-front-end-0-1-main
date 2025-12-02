@@ -1,0 +1,375 @@
+{
+  "name": "AppLayout",
+  "type": "layout",
+  "description": "Main application layout with sidebar navigation and header",
+  "version": "1.0.0",
+  "structure": {
+    "type": "div",
+    "props": {
+      "className": "flex h-screen bg-gray-100"
+    },
+    "children": [
+      {
+        "component": "Sidebar",
+        "props": {
+          "sidebarOpen": true,
+          "onToggle": "toggleSidebar",
+          "agents": "MOCK_AGENTS",
+          "onAgentClick": "handleAgentClick",
+          "onCreateAgent": "handleCreateAgent",
+          "t": "translations"
+        }
+      },
+      {
+        "type": "div",
+        "props": {
+          "className": "flex-1 flex flex-col overflow-hidden"
+        },
+        "children": [
+          {
+            "component": "Header",
+            "props": {
+              "onSidebarToggle": "toggleSidebar",
+              "t": "translations"
+            }
+          },
+          {
+            "component": "MainContent",
+            "props": {
+              "children": "props.children"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "components": {
+    "Sidebar": {
+      "type": "aside",
+      "props": {
+        "className": "bg-zinc-900 border-r border-zinc-700 w-64 transition-all duration-300 flex flex-col"
+      },
+      "children": [
+        {
+          "component": "LogoSection",
+          "props": {
+            "sidebarOpen": true,
+            "onToggle": "toggleSidebar"
+          }
+        },
+        {
+          "component": "NavigationSection",
+          "props": {
+            "navigation": "NAVIGATION",
+            "sidebarOpen": true,
+            "t": "translations"
+          }
+        },
+        {
+          "component": "UserSection",
+          "props": {
+            "sidebarOpen": true
+          }
+        }
+      ]
+    },
+    "Header": {
+      "type": "header",
+      "props": {
+        "className": "h-16 bg-white border-b border-gray-200 flex items-center"
+      },
+      "children": [
+        {
+          "type": "div",
+          "props": {
+            "className": "px-6 w-full"
+          },
+          "children": [
+            {
+              "type": "div",
+              "props": {
+                "className": "flex items-center justify-between"
+              },
+              "children": [
+                {
+                  "component": "MobileMenuButton",
+                  "props": {
+                    "onClick": "toggleSidebar"
+                  }
+                },
+                {
+                  "component": "HeaderActions",
+                  "props": {
+                    "t": "translations"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "HeaderActions": {
+      "type": "div",
+      "props": {
+        "className": "flex items-center gap-2"
+      },
+      "children": [
+        {
+          "component": "NotificationsDropdown",
+          "props": {
+            "t": "translations"
+          }
+        },
+        {
+          "component": "ProfileDropdown",
+          "props": {
+            "t": "translations"
+          }
+        }
+      ]
+    },
+    "LogoSection": {
+      "type": "div",
+      "props": {
+        "className": "h-16 border-b border-zinc-700 flex items-center px-6 bg-zinc-900"
+      },
+      "children": [
+        {
+          "type": "div",
+          "props": {
+            "className": "flex items-center justify-between w-full"
+          },
+          "children": [
+            {
+              "type": "div",
+              "props": {
+                "className": "flex items-center gap-3"
+              },
+              "children": [
+                {
+                  "type": "div",
+                  "props": {
+                    "className": "w-8 h-8 bg-accent-blue rounded-lg flex items-center justify-center"
+                  },
+                  "children": [
+                    {
+                      "component": "Zap",
+                      "props": {
+                        "className": "w-4 h-4 text-white"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "div",
+                  "children": [
+                    {
+                      "type": "h1",
+                      "props": {
+                        "className": "text-white text-lg font-semibold"
+                      },
+                      "content": "eCommy"
+                    },
+                    {
+                      "type": "p",
+                      "props": {
+                        "className": "text-zinc-400 text-xs"
+                      },
+                      "content": "Dashboard"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "component": "SidebarToggleButton",
+              "props": {
+                "onClick": "toggleSidebar",
+                "sidebarOpen": true
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "NavigationSection": {
+      "type": "nav",
+      "props": {
+        "className": "flex-1 p-4 space-y-1 overflow-y-auto bg-zinc-900"
+      },
+      "children": [
+        {
+          "component": "NavigationItems",
+          "props": {
+            "items": "NAVIGATION",
+            "sidebarOpen": true,
+            "t": "translations"
+          }
+        },
+        {
+          "type": "div",
+          "props": {
+            "className": "border-t border-zinc-700 my-4"
+          }
+        },
+        {
+          "component": "CreateAgentButton",
+          "props": {
+            "sidebarOpen": true,
+            "t": "translations"
+          }
+        },
+        {
+          "component": "AgentsList",
+          "props": {
+            "agents": "MOCK_AGENTS",
+            "sidebarOpen": true
+          }
+        }
+      ]
+    }
+  },
+  "data": {
+    "constants": {
+      "MOCK_AGENTS": [
+        {
+          "id": "1",
+          "name": "Customer Support Bot",
+          "status": "active",
+          "type": "support"
+        },
+        {
+          "id": "2",
+          "name": "Sales Assistant",
+          "status": "active",
+          "type": "sales"
+        },
+        {
+          "id": "3",
+          "name": "Lead Qualifier",
+          "status": "inactive",
+          "type": "lead"
+        },
+        {
+          "id": "4",
+          "name": "FAQ Helper",
+          "status": "active",
+          "type": "faq"
+        }
+      ],
+      "NAVIGATION": [
+        {
+          "labelKey": "navHome",
+          "href": "/dashboard",
+          "icon": "Home"
+        },
+        {
+          "labelKey": "navCRM",
+          "href": "/dashboard/crm",
+          "icon": "Users"
+        },
+        {
+          "labelKey": "navConnects",
+          "href": "/dashboard/connects",
+          "icon": "Code"
+        },
+        {
+          "labelKey": "navSettings",
+          "href": "/dashboard/settings",
+          "icon": "Settings"
+        }
+      ],
+      "USER": {
+        "name": "Alex Johnson",
+        "email": "alex@example.com",
+        "role": "Admin",
+        "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face",
+        "plan": "Pro Plan"
+      }
+    },
+    "icons": {
+      "AGENT_ICONS": {
+        "support": "MessageCircle",
+        "sales": "Users",
+        "lead": "Workflow",
+        "faq": "HelpCircle",
+        "default": "Bot"
+      },
+      "NOTIFICATION_ICONS": {
+        "message": "MessageSquare",
+        "system": "Settings",
+        "payment": "CreditCard",
+        "security": "Shield",
+        "update": "Download",
+        "default": "Bell"
+      }
+    }
+  },
+  "styles": {
+    "colorScheme": {
+      "primary": {
+        "background": "bg-zinc-900",
+        "text": "text-white",
+        "border": "border-zinc-700"
+      },
+      "secondary": {
+        "background": "bg-white",
+        "text": "text-gray-900",
+        "border": "border-gray-200"
+      },
+      "accent": {
+        "blue": "bg-accent-blue",
+        "blue2": "bg-accent-blue-2"
+      }
+    },
+    "spacing": {
+      "sidebar": {
+        "open": "w-64",
+        "closed": "w-20"
+      },
+      "header": "h-16",
+      "padding": {
+        "main": "px-6 py-6",
+        "sidebar": "p-4"
+      }
+    },
+    "transitions": "transition-all duration-300 ease-in-out"
+  },
+  "behavior": {
+    "responsive": {
+      "sidebar": {
+        "mobile": "hidden",
+        "desktop": "visible"
+      }
+    },
+    "state": {
+      "sidebarOpen": true,
+      "notificationsOpen": false,
+      "profileOpen": false
+    },
+    "actions": {
+      "toggleSidebar": "Toggles sidebar visibility",
+      "handleAgentClick": "Navigates to agent page",
+      "handleCreateAgent": "Navigates to agent creation",
+      "handleNotificationToggle": "Toggles notifications dropdown",
+      "handleProfileToggle": "Toggles profile dropdown"
+    }
+  },
+  "i18n": {
+    "keys": {
+      "navHome": "Home",
+      "navCRM": "CRM",
+      "navConnects": "Connects",
+      "navSettings": "Settings",
+      "createAgent": "Create Agent",
+      "existingAgents": "Existing Agents",
+      "profile": "Profile",
+      "billing": "Billing",
+      "security": "Security",
+      "downloads": "Downloads",
+      "help": "Help",
+      "signOut": "Sign Out"
+    }
+  }
+}

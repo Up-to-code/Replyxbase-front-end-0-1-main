@@ -1,0 +1,243 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String       @id
+  name          String
+  email         String
+  emailVerified Boolean      @default(false)
+  image         String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  members       Member[]
+  invitations   Invitation[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id                   String   @id
+  expiresAt            DateTime
+  token                String
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  ipAddress            String?
+  userAgent            String?
+  userId               String
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activeOrganizationId String?
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model Organization {
+  id String @id
+
+  name        String
+  slug        String
+  logo        String?
+  createdAt   DateTime
+  metadata    String?
+  members     Member[]
+  agents      Agent[]
+  invitations Invitation[]
+  customers   Customer[]
+  bookings    Booking[]
+
+  @@unique([slug])
+  @@map("organization")
+}
+
+model Agent {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String
+  role           String       @default("assistant")
+  status         String       @default("active") // active, inactive, training
+  avatar         String?
+
+  // Platforms/Integrations
+  isWebsiteEnabled  Boolean @default(false)
+  isWhatsappEnabled Boolean @default(false)
+  isDmEnabled       Boolean @default(false)
+
+  // Config for platforms
+  config Json? @default("{}")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([organizationId])
+  @@map("agent")
+}
+
+model Member {
+  id             String       @id
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           String       @default("member")
+  createdAt      DateTime
+
+  @@map("member")
+}
+
+model Invitation {
+  id             String       @id
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  email          String
+  role           String?
+  status         String       @default("pending")
+  expiresAt      DateTime
+  inviterId      String
+  user           User         @relation(fields: [inviterId], references: [id], onDelete: Cascade)
+
+  @@map("invitation")
+}
+
+model Customer {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  fullName       String
+  email          String
+  phone          String
+  company        String?
+  address        String?
+  notes          String?
+  avatar         String?
+  status         String       @default("lead") // lead, customer, churned
+  loyaltyTier    String?      @default("bronze") // bronze, silver, gold, platinum
+  totalBookings  Int          @default(0)
+  totalSpent     Float        @default(0)
+  lastVisit      DateTime?
+  preferences    String[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  bookings       Booking[]
+  activities     Activity[]
+  crmNotes       Note[]       @relation("CustomerNotes")
+
+  @@index([organizationId])
+  @@map("customer")
+}
+
+model Booking {
+  id              String       @id @default(cuid())
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customerId      String
+  customer        Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  date            DateTime
+  startTime       String
+  endTime         String
+  duration        Int // in minutes
+  people          Int          @default(1)
+  serviceType     String
+  occasion        String?
+  specialRequests String?
+  location        String?
+  status          String       @default("pending") // pending, confirmed, cancelled, completed, no-show
+  priority        String       @default("normal") // normal, high, urgent
+  staffAssigned   String?
+  notes           String?
+  rating          Int?
+  feedback        String?
+  source          String? // website, phone, walk-in, referral, social
+  tags            String[]
+  price           Float?
+  deposit         Float?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  activities      Activity[]
+  crmNotes        Note[]       @relation("BookingNotes")
+
+  @@index([organizationId])
+  @@index([customerId])
+  @@map("booking")
+}
+
+model Note {
+  id         String   @id @default(cuid())
+  content    String
+  isInternal Boolean  @default(true)
+  priority   String   @default("low") // low, medium, high
+  tags       String[]
+  createdAt  DateTime @default(now())
+  createdBy  String
+
+  // Relations
+  customerId String?
+  customer   Customer? @relation("CustomerNotes", fields: [customerId], references: [id], onDelete: Cascade)
+  bookingId  String?
+  booking    Booking?  @relation("BookingNotes", fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@map("note")
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  type      String // call, email, note, meeting
+  content   String
+  createdAt DateTime @default(now())
+  createdBy String
+
+  // Relations
+  bookingId  String?
+  booking    Booking?  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@map("activity")
+}

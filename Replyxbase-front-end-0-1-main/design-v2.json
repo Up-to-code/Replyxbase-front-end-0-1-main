@@ -1,0 +1,119 @@
+{
+  "meta": {
+    "name": "Anan SaaS Design System",
+    "version": "2.0",
+    "description": "Comprehensive design system documentation for AI context, including colors, typography, spacing, and component rules.",
+    "last_updated": "2025-11-22"
+  },
+  "principles": [
+    "Minimalism: Clean white surfaces, no unnecessary borders or shadows.",
+    "Full Screen: Applications should utilize 100vh, removing outer margins/padding.",
+    "Clarity: High contrast text, clear hierarchy, and distinct active states.",
+    "Modern Aesthetics: Use of 'Inter' font, rounded corners (radius-md), and subtle animations.",
+    "AI-First: Interfaces should default to AI modes where applicable (e.g., Inbox)."
+  ],
+  "tokens": {
+    "colors": {
+      "base": {
+        "background": "#ffffff",
+        "foreground": "#18181b",
+        "card": "#ffffff",
+        "card-foreground": "#18181b",
+        "popover": "#ffffff",
+        "popover-foreground": "#18181b",
+        "primary": "#2A4D9A",
+        "primary-foreground": "#fafafa",
+        "secondary": "#f4f4f5",
+        "secondary-foreground": "#18181b",
+        "muted": "#f4f4f5",
+        "muted-foreground": "#71717a",
+        "accent": "#f4f4f5",
+        "accent-foreground": "#18181b",
+        "destructive": "#ef4444",
+        "border": "#e4e4e7",
+        "input": "#e4e4e7",
+        "ring": "#a1a1aa"
+      },
+      "sidebar": {
+        "background": "#fafafa",
+        "foreground": "#18181b",
+        "primary": "#18181b",
+        "primary-foreground": "#fafafa",
+        "accent": "#f4f4f5",
+        "accent-foreground": "#18181b",
+        "border": "#e4e4e7",
+        "ring": "#a1a1aa"
+      },
+      "charts": {
+        "1": "#3b82f6",
+        "2": "#8b5cf6",
+        "3": "#10b981",
+        "4": "#f59e0b",
+        "5": "#ef4444"
+      }
+    },
+    "typography": {
+      "font-family": "var(--font-sans), system-ui, -apple-system, sans-serif",
+      "weights": {
+        "regular": 400,
+        "medium": 500,
+        "semibold": 600,
+        "bold": 700
+      },
+      "sizes": {
+        "xs": "0.75rem",
+        "sm": "0.875rem",
+        "base": "1rem",
+        "lg": "1.125rem",
+        "xl": "1.25rem",
+        "2xl": "1.5rem",
+        "3xl": "1.875rem",
+        "4xl": "2.25rem"
+      }
+    },
+    "spacing": {
+      "radius": {
+        "sm": "calc(0.625rem - 4px)",
+        "md": "calc(0.625rem - 2px)",
+        "lg": "0.625rem",
+        "xl": "calc(0.625rem + 4px)",
+        "full": "9999px"
+      },
+      "layout": {
+        "sidebar-width": "16rem",
+        "header-height": "4rem"
+      }
+    }
+  },
+  "components": {
+    "layout": {
+      "rule": "Use flexbox for full-height layouts. Avoid fixed positioning for main content areas unless necessary (e.g., modals).",
+      "structure": "Sidebar (fixed/sticky) + Main Content (flex-1 overflow-auto)."
+    },
+    "card": {
+      "background": "bg-white",
+      "border": "border border-gray-100",
+      "shadow": "shadow-sm (or none for flat design)",
+      "radius": "rounded-xl"
+    },
+    "button": {
+      "primary": "bg-gray-900 text-white hover:bg-gray-800 rounded-lg px-4 py-2",
+      "secondary": "bg-white text-gray-900 border border-gray-200 hover:bg-gray-50 rounded-lg px-4 py-2",
+      "ghost": "text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg px-2 py-2"
+    },
+    "input": {
+      "default": "bg-gray-50 border-transparent focus:bg-white focus:border-gray-200 focus:ring-0 rounded-xl px-4 py-2"
+    },
+    "inbox": {
+      "layout": "Two-column (Sidebar + Chat)",
+      "style": "Full screen, no outer padding, white background.",
+      "features": "AI Toggle, Platform Icons, File Upload, Retry Mechanism."
+    }
+  },
+  "animations": {
+    "fade-in": "animate-fade-in",
+    "slide-up": "animate-slide-up",
+    "float": "animate-float",
+    "transition": "transition-all duration-200"
+  }
+}
